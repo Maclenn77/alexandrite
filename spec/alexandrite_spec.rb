@@ -1,6 +1,7 @@
 # frozen_string_literal: false
 
 require 'spec_helper'
+require 'book'
 
 RSpec.describe Alexandrite::Book do
   subject { Alexandrite::Book.new('0262033844') }
@@ -13,6 +14,7 @@ RSpec.describe Alexandrite::Book do
 
       VCR.use_cassette('get_book') do
         it 'book title' do
+          binding.pry
           expect(result.title.downcase).to eq(expected_title.downcase)
         end
 

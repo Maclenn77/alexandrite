@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'pry'
 
 describe 'validate ISBN format' do
-  let(:book_class) { Class.new { extend Helpers::Format } }
+  let(:book_class) { Class.new  }
 
   describe 'valid ISBNs' do
     let(:valid_isbn10) { '0123456789' }

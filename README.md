@@ -1,4 +1,5 @@
 # Alexandrite GEM
+[![Gem Version](https://badge.fury.io/rb/alexandrite.svg)](https://badge.fury.io/rb/alexandrite)
 
 Alexandrite is a gem that fetches book's data by ISBN number and other parameters from the [Google API](https://developers.google.com/books) and [OCLC API](http://classify.oclc.org/classify2/). It's intended to help librarians and bibliophiles to manage their bookshelves and classify their books.
 

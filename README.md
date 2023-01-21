@@ -100,11 +100,12 @@ Want to contribute? Great!
 
 Author
 -----------
-[Eftakhairul Islam](https://eftakhairul.com)
+[J. P. Pérez-Tejada](https://mx.linkedin.com/in/juanpaulopereztejada)
 
-Contributors
+Gem inspired on GISBN. Special greetings to:
 -----------
 [Matt Seeberger](https://github.com/thebeardedgeek)
+[Eftakhairul Islam](https://eftakhairul.com)
 
 License
 ----

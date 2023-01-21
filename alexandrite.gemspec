@@ -5,11 +5,11 @@ require_relative 'lib/alexandrite/version'
 Gem::Specification.new do |spec|
   spec.name          = 'alexandrite'
   spec.version       = Alexandrite::VERSION
-  spec.authors       = ['Eftakhairul Islam', 'J. P. Pérez-Tejada']
-  spec.email         = ['eftakhairul@gmail.com', 'juan@daiuk.com']
-  spec.summary       = 'Book information from ISBN by Google Book API.'
+  spec.authors       = ['J. P. Pérez-Tejada']
+  spec.email         = ['jpereztejada@apexsystems.com', 'juan@daiuk.com']
+  spec.summary       = 'Tools for fetching books data from Google and OCLC'
   spec.description   = "Alexandrite is a gem that fetches public book's information by different params based
-on Google Book API. Powered by Faraday."
+on Google Book API and OCLC API . Powered by Faraday."
   spec.homepage      = 'https://github.com/maclenn77/alexandrite'
   spec.required_ruby_version = Gem::Requirement.new('>= 3.0')
   spec.license       = 'MIT'

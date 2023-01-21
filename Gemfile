@@ -6,5 +6,5 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'faraday'
-gem "faraday-decode_xml"
+gem 'faraday-decode_xml'
 gem 'rubocop'

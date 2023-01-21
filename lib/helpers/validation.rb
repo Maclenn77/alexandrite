@@ -2,6 +2,7 @@
 
 module Alexandrite
   module Helpers
+    # Validate inputs
     module Validation
       # @param
       # @return
@@ -15,6 +16,8 @@ module Alexandrite
 
         'ISBN should have 10 or 13 digits'
       end
+
+      def define_isbn_type(isbn) = "ISBN_#{isbn.length}"
     end
   end
 end

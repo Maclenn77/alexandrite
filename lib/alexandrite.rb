@@ -1,72 +1,84 @@
 # frozen_string_literal: true
 
-# require all files
-require_relative 'alexandrite/version'
-require 'rubygems'
-require 'faraday'
-require 'json'
-require_relative 'helpers/format'
-require_relative 'helpers/validation'
-require 'pry'
+require_relative 'alexandrite_books'
+require_relative 'alexandrite_google'
+require_relative 'alexandrite_oclc'
+require_relative 'error_type/errors'
 
+# Main gem methods for creating books from ISBN
 module Alexandrite
-  include Alexandrite::Helpers::Format
-  include Alexandrite::Helpers::Validation
+  include ErrorType
 
-  attr_reader :result, :isbn
+  # Get and Process data from Google API
+  class Google
+    extend Alexandrite::GoogleAPI
 
-  BASE_URL = 'https://www.googleapis.com/books/v1/volumes?q='
+    attr_reader :result
 
-  FILTERS = {
-    author: 'inauthor:',
-    isbn: 'isbn:',
-    lccn: 'lccn:',
-    oclc: 'oclc:',
-    publisher: 'inpublisher:',
-    subject: 'subject:',
-    title: 'intitle:'
-  }.freeze
-
-  # &fields=items(volumeInfo/title,volumeInfo/authors,volumeInfo/publisher,volumeInfo/description,volumeInfo/pageCount,volumeInfo/categories,volumeInfo/language,volumeInfo/industryIdentifiers)
-
-  FIELDS = {
-    title: 'volumeInfo/title',
-    authors: 'volumeInfo/authors'
-  }.freeze
-
-  # @param query [String]
-  # @return [Faraday::Response]
-  def search(query, projection: 'lite')
-    conn = Faraday.new("#{BASE_URL}#{query}&projection=#{projection}") do |r|
-      r.response :json
+    def initialize(key, query)
+      @result = search_by(key, query)
     end
 
-    conn.get.body
+    # @return [Alexandrite::Book]
+    def self.create_book(isbn)
+      volume_info = get_volume_info(isbn)
+      Alexandrite::Book.new(volume_info)
+    end
   end
 
-  # @param key [Symbol]
-  # @param query [String]
-  # @param fields [Array<String>]
-  # @return [Faraday::Response]
-  def search_by(key, query, projection: 'lite', **fields)
-    projection = "&projection=#{projection}"
-    url = fields.any? ? "#{BASE_URL}#{FILTERS[key]}#{query}#{add_fields(fields)}#{projection}" : "#{BASE_URL}#{FILTERS[key]}#{query}"
-    conn = Faraday.new(url) do |r|
-      r.response :json
+  # Get and Process data from OCLC API
+  class OCLC
+    extend Alexandrite::OCLCAPI
+
+    attr_reader :result
+
+    # return [Alexandrite::OCLC]
+    def initialize(key, query, api: :oclc)
+      @result = search_by(key, query, api: api)
     end
 
-    response = conn.get.body
+    # @return [Alexandrite::Book]
+    def self.create_book(type, identifier)
+      query = Alexandrite::OCLC.new(type, identifier)
+      response_code = get_response_code(query.result)
 
-    if zero_results?(response)
-      { error: 'Not results' }
-    else
-      binding.pry
-      { results_size: response['totalItems'],
-        books: response['items'] }
+      response(response_code, query)
     end
+  end
+
+  API = {
+    google: Alexandrite::Google,
+    oclc: Alexandrite::OCLC
+  }.freeze
+
+  def search_by(key, query, api: :google)
+    API[api].search_by(key, query)
+  end
+
+  def create_book(key, query)
+    book = API[:google].create_book(query)
+    return API[:oclc].create_book(key, query) if book.error_message
+
+    book
+  end
+
+  # @param isbns [Array]
+  # @return [Nil]
+  def bulk_create(isbns)
+    isbns.each do |isbn|
+      volume_info = volume_info(isbn)
+      book = Alexandrite::Book.new(volume_info)
+      add_to_collection(book)
+    end
+    nil
   end
 
   private
 
-  def zero_results?(response_body) = response_body['totalItems'].nil?
+  def get_volume_info(isbn)
+    query = search_by(:isbn, isbn)
+    return query[:books].first[:volume_info] unless query[:error_message]
+
+    query
+  end
 end

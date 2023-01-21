@@ -14,7 +14,6 @@ RSpec.describe Alexandrite::Book do
 
       VCR.use_cassette('get_book') do
         it 'book title' do
-          binding.pry
           expect(result.title.downcase).to eq(expected_title.downcase)
         end
 

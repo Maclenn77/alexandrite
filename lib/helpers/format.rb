@@ -2,6 +2,7 @@
 
 module Alexandrite
   module Helpers
+    # Format inputs and options
     module Format
       # @param string [String]
       # @return [String]

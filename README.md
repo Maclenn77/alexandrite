@@ -17,7 +17,7 @@ You don't have to call manually Google API with ISBN number. This gem will do ev
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'alexandrite_base'
+gem 'alexandrite'
 ```
 
 And then execute:
@@ -29,7 +29,7 @@ $ bundle
 Or install it yourself as globally:
 
 ```sh
-gem install alexandrite_base
+gem install alexandrite
 ```
 
 

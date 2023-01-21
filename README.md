@@ -1,19 +1,16 @@
-# gisbn GEM  [![Build Status](https://travis-ci.org/eftakhairul/gisbn.svg?branch=master)](https://travis-ci.org/eftakhairul/gisbn) [![GitHub issues](https://img.shields.io/github/issues/eftakhairul/gisbn.svg)](https://github.com/eftakhairul/gisbn/issues)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/eftakhairul/gisbn/master/LICENSE.txt)
+# Alexandrite GEM
 
-It fetches book's information by ISBN number based on Google Book API.
+It fetches book's information by ISBN number based on Google Book API and OCLC aPI
 
-  - Easy to get all information by ISBN
+  - Easy to get all information by ISBN and other parameters
   - Structure data
-
-You don't have to call manually Google API with ISBN number. This gem will do everything for you.
-
-
 
 ### Version
 0.0.1
 
 
 ### Installation
+
 Add this line to your application's Gemfile:
 
 ```ruby
@@ -34,7 +31,7 @@ gem install alexandrite
 
 
 ## Examples
-    book = Gisbn::Book.new "0262033844", "AIzaSyDKepjfaVBRcgsnPALw5s2UNyfOk-1FHUU", "ca"
+    book = Alexandrite::Book.new("0262033844")
 
     book.title
     #=> "Introduction to Algorithms"
@@ -52,17 +49,7 @@ gem install alexandrite
     #=> 0262033844
 
     book.isbn_13
-    #=> 9780262033848
-
-    book.thumbnail
-    #=> http://books.google.com/books/content?id=i-bUBQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
-
-    book.preview
-    #=> http://books.google.ca/books?id=i-bUBQAAQBAJ&printsec=frontcover&dq=isbn:0262033844&hl=&cd=1&source=gbs_api
-
-
-    book.gisbn.isbn = 9780321573513
-    book.fetch.title  => "Algorithms"
+    #=> 978026203384
 
 
 

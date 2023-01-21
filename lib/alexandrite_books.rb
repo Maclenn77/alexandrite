@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'alexandrite'
+require 'nokogiri'
 
 module Alexandrite
   # Create a book objects

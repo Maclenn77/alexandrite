@@ -1,9 +1,18 @@
 # Alexandrite GEM
 
-It fetches book's information by ISBN number based on Google Book API and OCLC aPI
+Alexandrite is a gem that fetches book's data by ISBN number and other parameters from the [Google API](https://developers.google.com/books) and [OCLC API](http://classify.oclc.org/classify2/). It's intended to help librarians and bibliophiles to manage their bookshelves and classify their books.
+
+With Alexandrite, it's
 
   - Easy to get all information by ISBN and other parameters
   - Structure data
+  
+## Features
+
+- Retrieves Book data from Google API and OCLC API
+- Suggest a Dewey Decimal Classification or a Library of Congress Classification with OCLC Data.
+- Add data to a virtual collection
+
 
 ### Version
 0.0.1
@@ -29,9 +38,13 @@ Or install it yourself as globally:
 gem install alexandrite
 ```
 
+## Usage
+
+Currently, Alexandrite is divided on four modules: Alexandrite, Alexandrite::Book, Alexandrite::GoogleAPI, and AlexandriteOCLCAPI. Require Alexandrite if you want to use an integration of all the modules, or use each module separately.
+
 
 ## Examples
-    book = Alexandrite::Book.new("0262033844")
+    book = Alexandrite.create_book("0262033844")
 
     book.title
     #=> "Introduction to Algorithms"

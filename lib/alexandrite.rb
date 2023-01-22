@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'alexandrite_books'
+require_relative 'alexandrite_book'
 require_relative 'alexandrite_google'
 require_relative 'alexandrite_oclc'
 require_relative 'error_type/errors'
@@ -63,15 +63,17 @@ module Alexandrite
     book
   end
 
-  # @param isbns [Array]
-  # @return [Nil]
-  def bulk_create(isbns)
-    isbns.each do |isbn|
-      volume_info = volume_info(isbn)
-      book = Alexandrite::Book.new(volume_info)
-      add_to_collection(book)
+  # @param key [String]
+  # @param data [Array<String>]
+  # @return [Array<Alexandrite::Books]
+  def bulk_create(key, data)
+    bookshelf = []
+    data.each do |query|
+      book = create_book(key, query)
+      bookshelf << book
     end
-    nil
+
+    bookshelf
   end
 
   private

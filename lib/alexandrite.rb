@@ -40,7 +40,6 @@ module Alexandrite
 
     # @return [Alexandrite::Book]
     def self.create_book(type, identifier)
-      binding.pry
       query = Alexandrite::OCLC.new(type, identifier)
       response_code = get_response_code(query.result)
 

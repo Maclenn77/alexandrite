@@ -8,5 +8,3 @@ gemspec
 gem 'faraday'
 gem 'faraday-decode_xml'
 gem 'rubocop'
-
-

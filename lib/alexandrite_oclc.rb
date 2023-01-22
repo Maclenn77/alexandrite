@@ -84,7 +84,7 @@ module Alexandrite
 
     def create_new_book(query)
       volume_info = get_book_data(query.result)
-      binding.pry
+
       Alexandrite::Book.new(volume_info)
     end
 
@@ -98,7 +98,7 @@ module Alexandrite
     def handle_error_creating_book(query)
       raise ErrorType::DataNotFound, response_cases(query.result, 0, 'none')
     rescue StandardError => e
-      Alexandrite::Book.new({:error_message => e.message, 'origin' => 'OCLC API'})
+      Alexandrite::Book.new({ :error_message => e.message, 'origin' => 'OCLC API' })
     end
 
     # @param [Nokogiri::XML] result
@@ -126,8 +126,6 @@ module Alexandrite
     end
 
     def response(response_code, query)
-
-      binding.pry
       case response_code
       when 0, 2
         create_new_book(query)

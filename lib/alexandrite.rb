@@ -22,6 +22,7 @@ module Alexandrite
     # @return [Alexandrite::Book]
     def self.create_book(isbn)
       volume_info = get_volume_info(isbn)
+
       Alexandrite::Book.new(volume_info)
     end
   end
@@ -77,7 +78,7 @@ module Alexandrite
 
   def get_volume_info(isbn)
     query = search_by(:isbn, isbn)
-    return query[:books].first[:volume_info] unless query[:error_message]
+    return query[:books].first['volumeInfo'] unless query[:error_message]
 
     query
   end

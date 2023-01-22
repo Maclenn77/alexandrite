@@ -50,6 +50,7 @@ module Alexandrite
 
     private
 
+    # @return [Integer]
     def get_response_code(result) = result.css('response').attribute('code').value.to_i
 
     def get_owis(result, length)
@@ -83,6 +84,7 @@ module Alexandrite
 
     def create_new_book(query)
       volume_info = get_book_data(query.result)
+
       Alexandrite::Book.new(volume_info)
     end
 
@@ -94,9 +96,9 @@ module Alexandrite
     end
 
     def handle_error_creating_book(query)
-      raise ErrorType::DataNotFound, response_cases(query, 0, 'none')
+      raise ErrorType::DataNotFound, response_cases(query.result, 0, 'none')
     rescue StandardError => e
-      Alexandrite::Book.new('error_message' => e.message)
+      Alexandrite::Book.new({ :error_message => e.message, 'origin' => 'OCLC API' })
     end
 
     # @param [Nokogiri::XML] result
@@ -104,7 +106,7 @@ module Alexandrite
     # @param [String] mode Possible: 'ddc' or 'lcc'
     # @return [String]
     def response_cases(result, length, mode)
-      code = get_response_code(result).to_i
+      code = get_response_code(result)
       case code
       when 0
         get_classification(result, mode)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'alexandrite'
-require_relative 'alexandrite_book'
+require_relative 'alexandrite_book_data'
 require_relative 'helpers/file_handler'
 
 # Create, Read, Update and Delete books in a book collection

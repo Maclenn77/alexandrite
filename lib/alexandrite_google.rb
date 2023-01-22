@@ -62,6 +62,13 @@ module Alexandrite
 
     private
 
+    def get_volume_info(key, query)
+      query = search_by(key, query)
+      return query[:books].first['volumeInfo'] unless query[:error_message]
+
+      query
+    end
+
     def zero_results?(response_body) = response_body['totalItems'].zero?
 
     def process_response(response)

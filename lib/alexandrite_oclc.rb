@@ -17,6 +17,7 @@ module Alexandrite
     include Nokogiri
     include Alexandrite::Helpers::Format
     include Alexandrite::Helpers::Validation
+    include Alexandrite::BookData
 
     BASE_URL = 'http://classify.oclc.org/classify2/Classify?'
 
@@ -83,22 +84,20 @@ module Alexandrite
     end
 
     def create_new_book(query)
-      volume_info = get_book_data(query.result)
-
-      Alexandrite::Book.new(volume_info)
+      Alexandrite::BookData.create_data(get_book_data(query.result))
     end
 
     def retry_create_new_book(query)
       owi = get_owis(query.result, 1)[0]
       new_query = Alexandrite::OCLC.new('owi', owi)
       volume_info = get_book_data(new_query.result)
-      Alexandrite::Book.new(volume_info)
+      Alexandrite::BookData.create_data(volume_info)
     end
 
     def handle_error_creating_book(query)
       raise ErrorType::DataNotFound, response_cases(query.result, 0, 'none')
     rescue StandardError => e
-      Alexandrite::Book.new({ :error_message => e.message, 'origin' => 'OCLC API' })
+      Alexandrite::BookData.create_data({ :error_message => e.message, 'origin' => 'OCLC API' })
     end
 
     # @param [Nokogiri::XML] result

@@ -20,7 +20,7 @@ module Alexandrite
     end
 
     # @return [Alexandrite::Book]
-    def self.create_book(isbn)
+    def self.create_from_google(isbn)
       volume_info = get_volume_info(isbn)
 
       Alexandrite::Book.new(volume_info)
@@ -39,7 +39,7 @@ module Alexandrite
     end
 
     # @return [Alexandrite::Book]
-    def self.create_book(type, identifier)
+    def self.create_from_oclc(type, identifier)
       query = Alexandrite::OCLC.new(type, identifier)
       response_code = get_response_code(query.result)
 
@@ -57,8 +57,8 @@ module Alexandrite
   end
 
   def create_book(key, query)
-    book = API[:google].create_book(query)
-    return API[:oclc].create_book(key, query) if book.error_message
+    book = API[:google].create_from_google(query)
+    return API[:oclc].create_from_oclc(key, query) if book.error_message
 
     book
   end

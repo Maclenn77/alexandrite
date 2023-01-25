@@ -31,28 +31,37 @@ module Alexandrite
       Nokogiri::XML(conn.get(search).body)
     end
 
+    def extract_value(attribute)
+      return nil unless attribute.respond_to?(:value)
+
+      attribute.value
+    end
+
+    def extract_nokogiri_data(document, children, attribute)
+      extract_value(document.css(children).attribute(attribute))
+    end
+
     def get_book_data(result)
       isbn = result.css('input').children.text
       isbn_type = define_isbn_type(isbn)
       {
         'origin' => 'OCLC API',
-        'title' => result.css('work').attribute('title').value,
-        'authors' => result.css('work').attribute('author').value,
-        'ddc' => result.css('mostPopular').attribute('nsfa').value,
+        'title' => extract_nokogiri_data(result, 'work', 'title'),
+        'authors' => extract_nokogiri_data(result, 'work', 'author'),
+        'ddc' => extract_nokogiri_data(result, 'mostPopular', 'nsfa'),
         isbn_type => isbn
       }
     end
 
     def recommend_classification(key, query, length = 5, mode: 'ddc')
       results = search_by(key, query)
-
       response_cases(results, length, mode)
     end
 
     private
 
     # @return [Integer]
-    def get_response_code(result) = result.css('response').attribute('code').value.to_i
+    def get_response_code(result) = extract_nokogiri_data(result, 'response', 'code').to_i
 
     def get_owis(result, length)
       owis = []
@@ -87,15 +96,8 @@ module Alexandrite
       Alexandrite::BookData.create_data(get_book_data(query.result))
     end
 
-    def retry_create_new_book(query)
-      owi = get_owis(query.result, 1)[0]
-      new_query = Alexandrite::OCLC.new('owi', owi)
-      volume_info = get_book_data(new_query.result)
-      Alexandrite::BookData.create_data(volume_info)
-    end
-
-    def handle_error_creating_book(query)
-      raise ErrorType::DataNotFound, response_cases(query.result, 0, 'none')
+    def handle_error_creating_book
+      raise ErrorType::DataNotFound, yield
     rescue StandardError => e
       Alexandrite::BookData.create_data({ :error_message => e.message, 'origin' => 'OCLC API' })
     end
@@ -129,9 +131,9 @@ module Alexandrite
       when 0, 2
         create_new_book(query)
       when 4
-        retry_create_new_book(query)
+        handle_error_creating_book { 'Not found exact item. Check coincidences' }
       else
-        handle_error_creating_book(query)
+        handle_error_creating_book { response_cases(query.result, 0, 'none') }
       end
     end
   end

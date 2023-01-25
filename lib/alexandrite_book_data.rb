@@ -45,12 +45,14 @@ module Alexandrite
         data[:isbn13] = volume_info['ISBN_13']
         return data
       end
-
-      volume_info['industryIdentifiers'].each do |identifier|
-        data[:isbn10] = identifier['identifier'] if identifier['type'] == 'ISBN_10'
-        data[:isbn13] = identifier['identifier'] if identifier['type'] == 'ISBN_13'
+      begin
+        volume_info['industryIdentifiers'].each do |identifier|
+          data[:isbn10] = identifier['identifier'] if identifier['type'] == 'ISBN_10'
+          data[:isbn13] = identifier['identifier'] if identifier['type'] == 'ISBN_13'
+        end
+      rescue NoMethodError
+        data
       end
-
       data
     end
   end

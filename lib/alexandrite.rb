@@ -21,9 +21,11 @@ module Alexandrite
       @result = search_with(key, query)
     end
 
-    # @return [Alexandrite::BookData]
+    # @return [nil]
     def self.create_from_google(key, query)
       Alexandrite::BookData.create_data(get_volume_info(key, query))
+    rescue StandardError => e
+      Alexandrite::BookData.create_data({ :error_message => e.message, 'origin' => 'Google API' })
     end
   end
 
@@ -58,8 +60,14 @@ module Alexandrite
   end
 
   def create_book(key, query)
+    log = Logger.new(STDOUT)
+    log.info "Fetching book info from Google API. Key: #{key}. Query: #{query}"
     book = API[:google].create_from_google(key, query)
-    return API[:oclc].create_from_oclc(key, query) if book[:error_message]
+    if book[:error_message]
+      log.warn "Failing when fetching book info. Error message: #{book[:error_message]}"
+      log.info "Fetching book info from OCLC API. Key: #{key}. Query: #{query}"
+      return API[:oclc].create_from_oclc(key, query)
+    end
 
     book
   end
@@ -69,8 +77,10 @@ module Alexandrite
   # @return [Array<Alexandrite::BookData]
   def bulk_create(key, data)
     bookshelf = []
+    log = Logger.new(STDOUT)
     data.each do |query|
       book = create_book(key, query)
+      log.info "Book created. Key #{key}. Query: #{query}. Source: #{book[:data_source]}"
       bookshelf << book
     end
 

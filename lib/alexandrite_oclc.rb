@@ -94,6 +94,8 @@ module Alexandrite
 
     def create_new_book(query)
       Alexandrite::BookData.create_data(get_book_data(query.result))
+    rescue StandardError => e
+      Alexandrite::BookData.create_data({ :error_message => e.message, 'origin' => 'OCLC API' })
     end
 
     def handle_error_creating_book

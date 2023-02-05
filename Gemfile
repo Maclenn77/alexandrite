@@ -6,5 +6,6 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'faraday'
+gem 'logger'
 gem 'faraday-decode_xml'
 gem 'rubocop'

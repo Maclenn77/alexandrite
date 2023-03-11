@@ -11,5 +11,6 @@ module Alexandrite
     def select_identifiers: (Hash[Symbol,Object] data, Hash[Symbol,Object] volume_info) -> Hash[Symbol,Object]
     def isbn10?: (Hash[String, String] identifier)-> bool
     def isbn13?: -> (Hash[String, String] identifier)-> bool
+
   end
 end

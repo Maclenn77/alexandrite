@@ -1,0 +1,10 @@
+module Alexandrite
+  VERSION: String
+  API: {google: singleton(Google), oclc: singleton(OCLC)}
+  include BookData
+  include ErrorType
+
+  def search_with: (String key, String query, ?api: :google | :oclc) -> (Nokogiri::XML::Document | {error_message: String, results_size: Integer, books: untyped})
+  def create_book: (String key, String query) -> {title: String?, authors: String?, published_date: String?, page_count: String?, description: String?, categories: String?, language: String?, data_source: String, isbn10: String?, isbn13: String?, error_message: String?}
+  def bulk_create: (String key, Array[String] data) -> Array[Hash[Symbol,Object]]
+end

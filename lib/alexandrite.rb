@@ -21,6 +21,8 @@ module Alexandrite
       @result = search_with(key, query)
     end
 
+    # @param [String] key
+    # @param [String] query
     # @return [nil]
     def self.create_from_google(key, query)
       Alexandrite::BookData.create_data(get_volume_info(key, query))
@@ -74,7 +76,7 @@ module Alexandrite
 
   # @param key [String]
   # @param data [Array<String>]
-  # @return [Array<Alexandrite::BookData]
+  # @return [Array<Alexandrite::BookData>]
   def bulk_create(key, data)
     bookshelf = []
     log = Logger.new(STDOUT)

@@ -1,0 +1,15 @@
+module Alexandrite
+  module BookData
+    def self.create_data: (Hash[:books | :error_message | :results_size | String, String?] volume_info) -> {title: String?, authors: String?, published_date: String?, page_count: String?, description: String?, categories: String?, language: String?, data_source: String, isbn10: String?, isbn13: String?, error_message: String?}
+    def self.add_basic_values: (Hash[:books | :error_message | :results_size | String, String?] volume_info) -> {title: String?, authors: String?, published_date: String?, page_count: String?, description: String?, categories: String?, language: String?}
+    def self.add_origin: (Hash[:books | :error_message | :results_size | String, String?] volume_info) -> String
+    def self.add_industry_identifiers: (Hash[:books | :error_message | :results_size | String, String?] volume_info, {title: String?, authors: String?, published_date: String?, page_count: String?, description: String?, categories: String?, language: String?, data_source: String} data) -> {title: String?, authors: String?, published_date: String?, page_count: String?, description: String?, categories: String?, language: String?, data_source: String, isbn10: String?, isbn13: String?}
+
+    private
+
+    def assign_isbn: (Hash[Symbol,Object] data, Hash[Symbol,Object] volume_info) -> Hash[Symbol,Object]
+    def select_identifiers: (Hash[Symbol,Object] data, Hash[Symbol,Object] volume_info) -> Hash[Symbol,Object]
+    def isbn10?: (Hash[String, String] identifier)-> bool
+    def isbn13?: -> (Hash[String, String] identifier)-> bool
+  end
+end

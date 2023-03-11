@@ -40,20 +40,37 @@ module Alexandrite
     def self.add_industry_identifiers(volume_info, data)
       return data unless volume_info[:error_message].nil?
 
-      if data[:data_source] == 'OCLC API'
-        data[:isbn10] = volume_info['ISBN_10']
-        data[:isbn13] = volume_info['ISBN_13']
-        return data
-      end
-      begin
-        volume_info['industryIdentifiers'].each do |identifier|
-          data[:isbn10] = identifier['identifier'] if identifier['type'] == 'ISBN_10'
-          data[:isbn13] = identifier['identifier'] if identifier['type'] == 'ISBN_13'
-        end
-      rescue NoMethodError
-        data
-      end
+      assign_isbn(data, volume_info)
+
       data
     end
+
+    private
+
+    def assign_isbn(data, volume_info)
+      case data[:data_source]
+      when 'OCLC API'
+        data[:isbn10] = volume_info['ISBN_10']
+        data[:isbn13] = volume_info['ISBN_13']
+      else
+        select_identifiers(data, volume_info)
+      end
+        data
+    end
+
+    def select_identifiers(data, volume_info)
+      return data unless volume_info['industryIdentifiers']
+
+      volume_info['industryIdentifiers'].each do |identifier|
+        data[:isbn10] = identifier['identifier'] if isbn10?(identifier)
+        data[:isbn13] = identifier['identifier'] if isbn13?(identifier)
+      end
+
+      data
+    end
+
+    def isbn10?(identifier) = identifier['type'] == 'ISBN_10'
+
+    def isbn13?(identifier) = identifier['type'] == 'ISBN_13'
   end
 end
